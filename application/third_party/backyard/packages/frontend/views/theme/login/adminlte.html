@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{adminlte}/plugins/fontawesome-free/css/all.min.css">
+    <!-- icheck bootstrap -->
+    <link rel="stylesheet" href="{adminlte}/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{adminlte}/dist/css/adminlte.min.css">
+</head>
+
+<body class="hold-transition login-page">
+    <div class="login-box">
+        <div class="login-logo">
+            <a href="javascript:void(0);" id="system-title"></a>
+        </div>
+        <!-- /.login-logo -->
+
+        <div class="login-form">
+
+        </div>
+
+    </div>
+    <!-- /.login-box -->
+
+    <!-- jQuery -->
+    <script src="{adminlte}/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="{adminlte}/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="{adminlte}/dist/js/adminlte.min.js"></script>
+
+    <!-- Backyard -->
+    <script src="{adminlte}/backyard/backyard.js"></script>
+    <script>
+        /**
+         * 設定為全域變數
+         */
+        var $backayrd = null;
+
+        $('document').ready(function() {
+            $backyard = $.backyard({
+                'userType': '{userType}',
+                'uri': '{uri}'
+            });
+
+            // 載入頁面的所有 Script
+            $backyard.page.script.get();
+
+            // 載入頁面的所有 CSS
+            $backyard.page.style.get();
+
+            // 載入頁面所需的 Metadata
+            $backyard.page.metadata.get(function(response) {
+
+                console.log(response);
+
+                // 設置標題
+                $('#system-title').html(response.title);
+                $('#page-title').html(response.templates.page.name);
+                $('title').html(response.templates.page.name + ' - ' + response.title);
+
+
+                // 載入版面內的所有組件
+                $backyard.template.load('page', 'div.login-form');
+            });
+
+        });
+    </script>
+</body>
+
+</html>

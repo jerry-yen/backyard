@@ -1,0 +1,11 @@
+.widgets .widget-block .card-header {
+    text-align: center;
+    padding-bottom: 13px;
+}
+
+.widget-block {
+    padding: 15px;
+    margin: 10px;
+    background-color: #eaeaea;
+    border-radius: 5px;
+}

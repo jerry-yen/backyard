@@ -1,0 +1,75 @@
+td i.fa-grip-vertical {
+    cursor: pointer;
+}
+
+label.new-image {
+    border: 4px dotted #007bff;
+    width: 150px;
+    height: 150px;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 45px;
+    padding: 35px;
+    color: #007bff;
+    cursor: pointer;
+    border-radius: 15px;
+    float: left;
+    margin: 10px;
+}
+
+div.image {
+    border: 1px solid black;
+    width: 150px;
+    height: 150px;
+    float: left;
+    margin: 10px;
+    border-radius: 15px;
+    position: relative;
+}
+
+div.image button {
+    border-radius: 30px;
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    padding: 0px 7px;
+    right: -13px;
+    top: -13px;
+    z-index: 10;
+}
+
+div.image-contain {
+    width: 150px;
+    height: 150px;
+    border-radius: 15px;
+    position: relative;
+    overflow: hidden;
+}
+
+div.image img {
+    width: 148px;
+    height: 148px;
+    object-fit: contain;
+}
+
+div.image div.progress {
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    height: 5px;
+    background-color: #d7de71;
+}
+
+div.image-in-list {
+    border: 1px solid #c3c3c3;
+    width: 150px;
+    height: 150px;
+    border-radius: 5px;
+    position: relative;
+}
+
+div.image-in-list img {
+    width: 148px;
+    height: 148px;
+    object-fit: contain;
+}

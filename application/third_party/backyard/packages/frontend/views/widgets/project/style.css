@@ -1,0 +1,67 @@
+tip {
+    color: green;
+    padding-left: 10px;
+}
+
+invalid {
+    color: white;
+    float: right;
+    padding: 3px 10px;
+    border-radius: 5px;
+    background-color: red
+}
+
+.invalid {
+    border-color: red;
+}
+
+.grouplabel {
+    background-color: #ebecec;
+    width: 100%;
+    color: black;
+    padding: 5px;
+    text-align: center;
+    border-radius: 5px;
+}
+
+.sort-drop {
+    cursor: pointer;
+}
+
+div.project-list button.add-project {
+    border-radius: 20px;
+    float: right;
+}
+
+div.project-list button.add-project {
+    border-radius: 20px;
+    float: right;
+}
+
+div.todolist-view button.add-item {
+    border-radius: 20px;
+    float: right;
+    margin: 10px 10px;
+}
+
+ul.project-list li.nav-item {
+    line-height: 30px;
+}
+
+ul.project-list li.nav-item span {
+    margin-bottom: 10px;
+}
+
+ul.project-list li.nav-item#sprint span,
+ul.project-list li.nav-item#sprint i {
+    color: red;
+}
+
+#item-info div.modal-body {
+    max-height: 600px;
+    overflow: scroll;
+}
+
+ul.project-list span.progress {
+    border-radius: 5px;
+}
