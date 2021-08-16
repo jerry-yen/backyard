@@ -63,6 +63,7 @@
                                             <option value="switch">開關閘</option>\
                                             <option value="fileupload">檔案上傳</option>\
                                             <option value="imageupload">圖片上傳</option>\
+                                            <option value="multiselect">多選下拉</option>\
                                         </optgroup>\
                                         <optgroup label="其他元件">\
                                             <option value="htmleditor">HTML編輯器</option>\

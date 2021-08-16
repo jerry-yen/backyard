@@ -80,10 +80,13 @@ class Component extends \backyard\core\Metadata
                     $script .= file_get_contents($libraryPath) . "\r\n";
                     continue;
                 }
-
-                $libraryPath = $this->viewPath . '/libraries/' . $libraryName;
-                if (file_exists($libraryPath)) {
-                    $script .= file_get_contents($libraryPath) . "\r\n";
+                $parts = explode('.', $libraryName);
+                $ext = end($parts);
+                if ($ext == 'js') {
+                    $libraryPath = $this->viewPath . '/libraries/' . $libraryName;
+                    if (file_exists($libraryPath)) {
+                        $script .= file_get_contents($libraryPath) . "\r\n";
+                    }
                 }
             }
         }
@@ -109,9 +112,42 @@ class Component extends \backyard\core\Metadata
             $content = $this->refinePathInHtmlContent($content);
             $content = str_replace('{code}', $code, $content) . "\r\n";
 
-            return $content;
+            $libraryContent = $this->getStyleLibraries($this->viewPath . 'components/' . $code . '/libraries.json');
+
+            return $content . "\r\n" . $libraryContent;
         } else {
             return '';
         }
+    }
+
+    /**
+     * 取得元件CSS所需的第三方套件
+     * 
+     * @param string $libraryJSONFile 套件設定檔路徑
+     * 
+     * @return string
+     */
+    private function getStyleLibraries($libraryJSONFile)
+    {
+        $style = '';
+        if (file_exists($libraryJSONFile)) {
+            $libraries = json_decode(file_get_contents($libraryJSONFile), true);
+            foreach ($libraries as $libraryName) {
+                $libraryPath = $this->viewPath . '/libraries/' . $libraryName . '/' . $libraryName . '.css';
+                if (file_exists($libraryPath)) {
+                    $style .= file_get_contents($libraryPath) . "\r\n";
+                    continue;
+                }
+                $parts = explode('.', $libraryName);
+                $ext = end($parts);
+                if ($ext == 'css') {
+                    $libraryPath = $this->viewPath . '/libraries/' . $libraryName;
+                    if (file_exists($libraryPath)) {
+                        $style .= file_get_contents($libraryPath) . "\r\n";
+                    }
+                }
+            }
+        }
+        return $style;
     }
 }

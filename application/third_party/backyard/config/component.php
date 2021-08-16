@@ -22,7 +22,8 @@ $config['components'] = array(
 
     array(
         'group' => 'jQuery套件', 'components' => array(
-            array('name' => '開關閘', 'component' => 'switch')
+            array('name' => '開關閘', 'component' => 'switch'),
+            array('name' => '多選下拉', 'component' => 'multiselect'),
         )
     ),
   

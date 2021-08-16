@@ -1,11 +1,11 @@
 (function($) {
 
     /**
-     * 單選下拉選單元件
+     * 多選下拉選單元件
      * 
      * @param {*} _settings 設定值
      */
-    $.select_component = function(_settings) {
+    $.multiselect_component = function(_settings) {
         var settings = $.extend({
             'id': '',
             'tip': '',
@@ -14,7 +14,7 @@
             'class': 'form-control',
             'label': '',
             'source': '',
-            'component': $('<select></select>')
+            'component': $('<select multiple="multiple"></select>')
         }, _settings);
 
         // 自定義函式
@@ -52,7 +52,9 @@
             element: function() {
                 return settings.component;
             },
-            elementConvertToComponent: function() {},
+            elementConvertToComponent: function() {
+                settings.component.multiselect();
+            },
             getName: function() {
                 return settings.name;
             },
