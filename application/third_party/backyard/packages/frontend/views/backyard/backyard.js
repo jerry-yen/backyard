@@ -53,7 +53,8 @@
                             'GET',
                             null,
                             null,
-                            'script'
+                            'script',
+                            false
                         );
                     }
                 },
