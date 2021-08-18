@@ -96,18 +96,24 @@
                 }
             },
             setValue: function(value) {
-                if (value.trim() == '') {
-                    value = [];
-                } else {
-                    value = JSON.parse(value);
-                }
+
+                $('option', settings.component).each(function(element) {
+                    settings.component.multiselect('deselect', $(this).val());
+                });
 
                 for (var key in value) {
-                    settings.component.multiselect('select', value[key]);
+                    settings.component.multiselect('select', value[key].target_id);
                 }
             },
             showInList: function(value) {
-                return value;
+                var labels = '';
+                for (var key in value) {
+                    labels += '<div class="badge bg-blue" style="margin:0px 3px;">';
+                    labels += $('option[value="' + value[key].target_id + '"]', settings.component).text();
+                    labels += '</div>';
+                }
+
+                return labels;
             }
         };
 

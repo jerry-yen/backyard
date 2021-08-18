@@ -44,6 +44,9 @@ class Item extends \backyard\core\Dao
                 if (in_array($field['component'], array('imageupload', 'fileupload'))) {
                     $item->{$field['dbVariable']} = $item->getFiles($field['dbVariable'], true);
                 }
+                else if (in_array($field['component'], array('multiselect'))) {
+                    $item->{$field['dbVariable']} = $item->getRelations($field['dbVariable'], true);
+                }
             }
             $items[] = $item->toArray();
         }
@@ -68,6 +71,9 @@ class Item extends \backyard\core\Dao
         foreach ($fields as $field) {
             if (in_array($field['component'], array('imageupload', 'fileupload'))) {
                 $item->{$field['dbVariable']} = $item->getFiles($field['dbVariable'], true);
+            }
+            else if (in_array($field['component'], array('multiselect'))) {
+                $item->{$field['dbVariable']} = $item->getRelations($field['dbVariable'], true);
             }
         }
 
@@ -114,6 +120,8 @@ class Item extends \backyard\core\Dao
         // 逐個欄位確認是否有特殊欄位，例如：檔案上傳、子項目、關連項目
         $fields = $dataset->fields;
         foreach ($fields as $field) {
+
+            // 檔案上傳
             if (in_array($field['component'], array('imageupload', 'fileupload'))) {
 
                 $files = json_decode($data[$field['dbVariable']], true);
@@ -125,6 +133,22 @@ class Item extends \backyard\core\Dao
                     $file->sequence = $key;
                     $file->moveTemporaryToUploadDirectory();
                     $file->insert();
+                }
+
+                $emptyFields[$field['dbVariable']] = '';
+            }
+
+            // 關連項目
+            else if (in_array($field['component'], array('multiselect'))) {
+                $relations = json_decode($data[$field['dbVariable']], true);
+                foreach ($relations as $key => $relation) {
+                    $item = new \backyard\core\Relation();
+                    $item->source_id = $insert_id;
+                    $item->source_field_variable = $field['dbVariable'];
+                    $item->target_id = $relation;
+                    $item->sorted_at = date('Y-m-d H:i:s');
+                    $item->sequence = $key;
+                    $item->insert();
                 }
 
                 $emptyFields[$field['dbVariable']] = '';
@@ -167,47 +191,96 @@ class Item extends \backyard\core\Dao
 
                 // 取得原本資料庫裡的檔案清單
                 $dbFiles = $this->getFiles($field['dbVariable'], true);
-                foreach($dbFiles as $key => $file){
+                foreach ($dbFiles as $key => $file) {
                     $dbFiles[$file['id']] = $file;
                     unset($dbFiles[$key]);
                 }
 
                 // 本次傳送來的檔案清單
                 $reqFiles = json_decode($data[$field['dbVariable']], true);
-                foreach($reqFiles as $key => $file){
+                foreach ($reqFiles as $key => $file) {
                     $reqFiles[$file['id']] = $file;
                     unset($reqFiles[$key]);
                 }
 
                 // 對比檔案清單，資料庫有的，但本次送來的檔案清單沒有，代表資料庫要刪除該檔案
-                foreach($dbFiles as $id => $file){
-                    if(!isset($reqFiles[$id])){
+                foreach ($dbFiles as $id => $file) {
+                    if (!isset($reqFiles[$id])) {
                         get_instance()->backyard->file->delete('file', $file);
                     }
                 }
 
                 // 比對檔案清單，本次送來的檔案清單有的檔案，資料庫的沒有，代表要新增
                 $sequence = 0;
-                foreach($reqFiles as $id => $file){
+                foreach ($reqFiles as $id => $file) {
                     $file = new \backyard\core\File('file', $file);
-                    if(!isset($dbFiles[$id])){
+                    if (!isset($dbFiles[$id])) {
                         $file->own_id = $data['id'];
                         $file->own_field = $field['dbVariable'];
                         $file->sorted_at = date('Y-m-d H:i:s');
                         $file->sequence = $sequence;
                         $file->moveTemporaryToUploadDirectory();
                         $file->insert();
-                    }
-                    else{
+                    } else {
                         $file->sorted_at = date('Y-m-d H:i:s');
                         $file->sequence = $sequence;
                         $file->update();
                     }
 
-                    $sequence ++;
+                    $sequence++;
                 }
 
-                $emptyFields[$field['dbVariable']] = true;
+                $emptyFields[$field['dbVariable']] = '';
+            }
+
+            // 關連項目
+            else if (in_array($field['component'], array('multiselect'))) {
+
+                $this->data['id'] = $data['id'];
+
+                // 取得原本資料庫裡的關連清單
+                $dbRelations = $this->getRelations($field['dbVariable'], true);
+                foreach ($dbRelations as $key => $relation) {
+                    $dbRelations[$relation['target_id']] = $relation;
+                    unset($dbRelations[$key]);
+                }
+
+                // 本次傳送來的關連清單
+                $reqRelations = json_decode($data[$field['dbVariable']], true);
+                foreach ($reqRelations as $key => $relation) {
+                    $reqRelations[$relation] = $relation;
+                    unset($reqRelations[$key]);
+                }
+
+                // 對比關連清單，資料庫有的，但本次送來的關連清單沒有，代表資料庫要刪除該關連
+                foreach ($dbRelations as $id => $relation) {
+                    if (!isset($reqRelations[$id])) {
+                        get_instance()->backyard->item->delete('relation', $relation);
+                    }
+                }
+
+                // 比對關連清單，本次送來的關連清單有的關連，資料庫的沒有，代表要新增
+                $sequence = 0;
+                foreach ($reqRelations as $id => $relation) {
+                    $item = new \backyard\core\Relation();
+                    if (!isset($dbRelations[$id])) {
+                        $item->source_id = $data['id'];
+                        $item->source_field_variable = $field['dbVariable'];
+                        $item->target_id = $relation;
+                        $item->sorted_at = date('Y-m-d H:i:s');
+                        $item->sequence = $sequence;
+                        $item->insert();
+                    } else {
+                        $item->id = $id;
+                        $item->sorted_at = date('Y-m-d H:i:s');
+                        $item->sequence = $sequence;
+                        $item->update();
+                    }
+
+                    $sequence++;
+                }
+
+                $emptyFields[$field['dbVariable']] = '';
             }
         }
 
@@ -245,6 +318,7 @@ class Item extends \backyard\core\Dao
         if ($toArray) {
             return $responses;
         } else {
+            $files = array();
             foreach ($responses as $file) {
                 $files[] = new \backyard\core\File('file', $file);
             }
@@ -255,8 +329,25 @@ class Item extends \backyard\core\Dao
     /**
      * 取得關連的資料項目
      */
-    public function getRelatiedItems()
+    public function getRelations($field_name, $toArray = false){
+        $responses = parent::_list('relation', array('source_id' => $this->data['id'], 'source_field_variable' => $field_name));
+        if ($toArray) {
+            return $responses;
+        } else {
+            $relations = array();
+            foreach ($responses as $response) {
+                $relations[] = new \backyard\core\Relation('relation', $response);
+            }
+            return $relations;
+        }
+    }
+
+    /**
+     * 取得關連的資料項目
+     */
+    public function getRelatiedItems($field_name, $toArray = false)
     {
+        
     }
 
     /**
