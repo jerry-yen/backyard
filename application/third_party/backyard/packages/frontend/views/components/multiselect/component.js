@@ -43,7 +43,6 @@
                             'api/items/' + source.dataset, {},
                             'GET',
                             function(response) {
-                                console.log(response);
                                 if (response.status == 'success') {
                                     for (var key in response.items) {
                                         settings.component.append('<option value="' + response.items[key]['id'] + '">' + response.items[key]['title'] + '</option>');
@@ -84,7 +83,7 @@
                 return settings.name;
             },
             getValue: function() {
-                return settings.component.val();
+                return JSON.stringify(settings.component.val());
             },
             setInvalid: function(message) {
                 var invalid = $('invalid[for="' + settings.id + '"]');
@@ -97,7 +96,15 @@
                 }
             },
             setValue: function(value) {
-                settings.component.val(value);
+                if (value.trim() == '') {
+                    value = [];
+                } else {
+                    value = JSON.parse(value);
+                }
+
+                for (var key in value) {
+                    settings.component.multiselect('select', value[key]);
+                }
             },
             showInList: function(value) {
                 return value;
