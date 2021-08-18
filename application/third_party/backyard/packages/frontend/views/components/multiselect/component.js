@@ -25,6 +25,8 @@
                     .attr('class', settings.class)
                     .attr('name', settings.name)
                     .val(settings.value);
+
+                // 指定 API 資料給選單
                 if (settings.source.indexOf('api://') === 0) {
                     var apiUrl = settings.source.substring(6);
                     $.backyard().process.api('/index.php/api/' + apiUrl, {}, 'GET', function(response) {
@@ -34,9 +36,32 @@
                     });
                 } else {
                     var source = (settings.source == '' || settings.source == undefined) ? [] : JSON.parse(settings.source);
-                    for (var key in source) {
-                        settings.component.append('<option value="' + key + '">' + source[key] + '</option>');
+
+                    // 指定資料集的資料給選單
+                    if (source.dataset != undefined) {
+                        $backyard.utility.api(
+                            'api/items/' + source.dataset, {},
+                            'GET',
+                            function(response) {
+                                console.log(response);
+                                if (response.status == 'success') {
+                                    for (var key in response.items) {
+                                        settings.component.append('<option value="' + response.items[key]['id'] + '">' + response.items[key]['title'] + '</option>');
+                                    }
+                                }
+                            },
+                            null,
+                            'JSON',
+                            false
+                        );
+                    } else {
+
+                        // 預設為陣列資料
+                        for (var key in source) {
+                            settings.component.append('<option value="' + key + '">' + source[key] + '</option>');
+                        }
                     }
+
                 }
 
             },
