@@ -22,6 +22,7 @@
                     metadata = $backyard.template.widgets[settings.code];
                     console.log(metadata);
                     widget.form.event.login();
+                    widget.form.event.keypress();
                 },
                 event: {
                     /**
@@ -54,6 +55,22 @@
                                 }
                             );
 
+                        });
+                    },
+
+                    keypress: function() {
+                        $('input[name="account"]').keypress(function(event) {
+                            // Enter
+                            if (event.keyCode == 13) {
+                                $('input[name="password"]').focus();
+                            }
+                        });
+
+                        $('input[name="password"]').keypress(function(event) {
+                            // Enter
+                            if (event.keyCode == 13) {
+                                $(settings.login_button_selector).click();
+                            }
                         });
                     }
                 },
