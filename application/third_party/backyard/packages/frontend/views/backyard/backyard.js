@@ -93,6 +93,9 @@
                     $('*', template).remove();
 
                     // 逐一載入組件
+                    if (pageMetedata.templates[templateType] == undefined) {
+                        return;
+                    }
                     var widgets = pageMetedata.templates[templateType].widgets;
                     for (var key in widgets) {
                         template.append('<div widget="' + widgets[key].code + '" class="col-' + widgets[key].mobile + ' col-sm-' + widgets[key].mobile + ' col-md-' + widgets[key].pad + ' col-lg-' + widgets[key].desktop + ' col-xl-' + widgets[key].desktop + '"></div>');
