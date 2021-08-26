@@ -205,7 +205,6 @@
                 if (items == undefined || items == '') {
                     items = [];
                 }
-                console.log(items);
                 items = this.loadItem(items, 1);
                 for (var key in items) {
                     $('div.root', settings.component).append(items[key]);
@@ -224,7 +223,7 @@
                             item.append('<div class="list" style="margin-left:55px;"></div>')
                         }
                         for (var subKey in subItems) {
-                            $('div.list', item).append(subItems[subKey]);
+                            $('div.list', item).eq(0).append(subItems[subKey]);
                         }
                     } else if (items[key].type == 'page') {
                         var item = settings.emptyItem.clone();
