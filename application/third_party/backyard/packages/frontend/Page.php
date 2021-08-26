@@ -77,7 +77,8 @@ class Page extends \backyard\core\Metadata
             if (substr($page->uri, 0, 1) == '/') {
                 $page->uri = substr($page->uri, 1);
             }
-            if ($page->uri == $uri) {
+            $uris = explode(',', $page->uri);
+            if (in_array($uri, $uris)) {
                 return $page;
             }
         }
@@ -139,7 +140,7 @@ class Page extends \backyard\core\Metadata
             return 'page/' . $this->data['code'];
         }
 
-        return trim($this->data['uri']);
+        return trim(explode(',',$this->data['uri'])[0]);
     }
 
     /**

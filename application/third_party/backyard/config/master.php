@@ -654,7 +654,7 @@ $config['master']['template']['rightside'] = array(
 $config['master']['page']['login'] = array(
     'name'      => '登入頁面',
     'code'      => 'login',
-    'uri'      => 'master/login',
+    'uri'      => 'master/login,master',
     'theme'     => 'login/adminlte',
     'widgets'   => array(
         array('code' => 'login', 'desktop' => 12, 'pad' => 12, 'mobile' => 12),
