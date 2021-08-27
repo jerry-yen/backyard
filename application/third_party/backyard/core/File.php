@@ -133,7 +133,7 @@ class File extends \backyard\core\Item
         return $insert_id;
     }
 
-    public function update($table = '', $file = array())
+    public function update($table = '', $file = array(), $skipValidation = false)
     {
         if ($table == '') {
             $table = $this->table;

@@ -43,8 +43,7 @@ class Item extends \backyard\core\Dao
             foreach ($fields as $field) {
                 if (in_array($field['component'], array('imageupload', 'fileupload'))) {
                     $item->{$field['dbVariable']} = $item->getFiles($field['dbVariable'], true);
-                }
-                else if (in_array($field['component'], array('multiselect'))) {
+                } else if (in_array($field['component'], array('multiselect'))) {
                     $item->{$field['dbVariable']} = $item->getRelations($field['dbVariable'], true);
                 }
             }
@@ -71,8 +70,7 @@ class Item extends \backyard\core\Dao
         foreach ($fields as $field) {
             if (in_array($field['component'], array('imageupload', 'fileupload'))) {
                 $item->{$field['dbVariable']} = $item->getFiles($field['dbVariable'], true);
-            }
-            else if (in_array($field['component'], array('multiselect'))) {
+            } else if (in_array($field['component'], array('multiselect'))) {
                 $item->{$field['dbVariable']} = $item->getRelations($field['dbVariable'], true);
             }
         }
@@ -165,7 +163,7 @@ class Item extends \backyard\core\Dao
     /**
      * 修改資料
      */
-    public function update($table = '', $data = array())
+    public function update($table = '', $data = array(), $skipValidation = false)
     {
         if ($data == array()) {
             $data = $this->data;
@@ -173,10 +171,13 @@ class Item extends \backyard\core\Dao
 
 
         $dataset = get_instance()->backyard->dataset->get($table);
-        $response = get_instance()->backyard->validator->checkInputs($dataset->toArray(), $data);
-        if ($response['status'] == 'failed') {
-            return $response;
+        if (!$skipValidation) {
+            $response = get_instance()->backyard->validator->checkInputs($dataset->toArray(), $data);
+            if ($response['status'] == 'failed') {
+                return $response;
+            }
         }
+
 
         $data['updated_at'] = date('Y-m-d H:i:s');
         parent::_update($table, $data, array('id' => $data['id']));
@@ -329,7 +330,8 @@ class Item extends \backyard\core\Dao
     /**
      * 取得關連的資料項目
      */
-    public function getRelations($field_name, $toArray = false){
+    public function getRelations($field_name, $toArray = false)
+    {
         $responses = parent::_list('relation', array('source_id' => $this->data['id'], 'source_field_variable' => $field_name));
         if ($toArray) {
             return $responses;
@@ -347,7 +349,6 @@ class Item extends \backyard\core\Dao
      */
     public function getRelatiedItems($field_name, $toArray = false)
     {
-        
     }
 
     /**
