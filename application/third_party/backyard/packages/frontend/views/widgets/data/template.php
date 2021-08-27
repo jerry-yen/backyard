@@ -55,6 +55,7 @@
 
         <div class="card-footer">
             <button type="button" class="submit btn btn-primary">儲存</button>
+            <button type="button" class="cancel btn bg-gray">回清單</button>
         </div>
     </form>
 </div>

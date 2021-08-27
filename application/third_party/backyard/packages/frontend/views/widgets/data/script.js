@@ -18,6 +18,7 @@
             'sort_cancel_button_selector': 'button.sort-return',
             'sort_check_button_selector': 'button.check-sort',
             'submit_button_selector': 'button.submit',
+            'cancel_button_selector': 'button.cancel',
             'list_button_selector': 'button.list',
             'return_button_selector': 'button.return',
             'page_button_selector': 'li.page-item.number',
@@ -475,6 +476,7 @@
                     }
 
                     widget.form.event.submit();
+                    widget.form.event.cancel();
                 },
 
                 data: function(id) {
@@ -557,6 +559,14 @@
                                     }
                                 }
                             );
+                        });
+                    },
+
+                    cancel: function() {
+                        $(settings.cancel_button_selector).click(function() {
+                            widget.interface.turn('table');
+                            widget.table.initial();
+                            widget.table.data();
                         });
                     }
                 }
