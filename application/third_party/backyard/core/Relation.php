@@ -55,7 +55,7 @@ class Relation extends \backyard\core\Item
         return $insert_id;
     }
 
-    public function update($table = '', $relation = array())
+    public function update($table = '', $relation = array(), $skipValidation = false)
     {
         if ($table == '') {
             $table = $this->table;
