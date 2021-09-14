@@ -65,7 +65,11 @@
                 return settings.name;
             },
             getValue: function() {
-                return $('input[type="hidden"]', settings.component).val();
+                var datas = [];
+                $('input[type="text"]', settings.component).each(function() {
+                    datas.push($(this).val());
+                });
+                return JSON.stringify(datas);
             },
             setInvalid: function(message) {
                 var invalid = $('invalid[for="' + settings.id + '"]');
@@ -78,14 +82,27 @@
                 }
             },
             setValue: function(value) {
-                $('input[type="hidden"]', settings.component).val(value);
 
-                $.get('/' + source.reverse_api, { 'value': value }, function(response) {
-                    $('input[type="text"]', settings.component).val(response.text);
-                }, 'JSON');
+                $('div.wrap div.item', settings.component).remove();
+                if (value == undefined || value == '') {
+                    return;
+                }
+
+                datas = JSON.parse(value);
+                for (var key in datas) {
+                    var item = settings.emptyItem.clone();
+                    $('input[type="text"]', item).val(datas[key]);
+                    $('div.wrap', settings.component).append(item);
+                }
+
+
             },
             showInList: function(value) {
-                return value;
+                var datas = [];
+                $('input[type="text"]', settings.component).each(function() {
+                    datas.push($(this).val());
+                });
+                return datas.join('<br />');
             }
         };
 
