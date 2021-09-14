@@ -31,20 +31,23 @@ class Page extends CI_Controller
     {
         $this->load->helper('url');
         $uri = $this->uri->uri_string();
-        
+
         $parts = explode('/', $uri);
-        if($parts[0] == 'master'){
+        if ($parts[0] == 'master') {
             $this->backyard->setUser('master');
-        }
-        elseif($parts[0] == 'admin'){
+        } elseif ($parts[0] == 'admin') {
             $this->backyard->setUser('admin');
-        }
-        else{
+        } else {
             $this->backyard->setUser('user');
         }
 
         $page = $this->backyard->page->getByURI($uri);
 
-        echo $page->getHTML();
+        if ($page == array()) {
+            // 之後可設計成專有的 404 頁面
+            echo '404 Page Not Found!';
+        } else {
+            echo $page->getHTML();
+        }
     }
 }
