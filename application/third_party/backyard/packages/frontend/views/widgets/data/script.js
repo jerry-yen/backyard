@@ -612,9 +612,9 @@
 
                 data: function() {
 
-                    var params = settings.params; //$.extend({ 'count': '-1' }, settings.params);
+                    var params = settings.params;
                     var url = (metadata.setting.datas_event == undefined || metadata.setting.datas_event == '') ? ('api/items/' + metadata.dataset.code) : metadata.setting.datas_event;
-
+                    params.count = -1;
                     $backyard.utility.api(
                         url,
                         params,
