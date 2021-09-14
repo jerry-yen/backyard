@@ -15,12 +15,12 @@
             'label': '',
             'source': '',
             'component': $('<div>\
-                                <button type="button" class="btn bg-green float-right"><i class="fas fa-plus"></i></button>\
-                                <div style="clear:both;"></div>\
+                                <button type="button" class="add-item btn bg-green float-right"><i class="fas fa-plus"></i></button>\
+                                <div class="clearfix"></div>\
                                 <br />\
                                 <div class="wrap"></div>\
                             </div>'),
-            'emptyItem': $('<div class="item"><input type="text" class="form-control float-left" style="width:90%;"/><button type="button" class="btn bg-red float-right"><i class="fas fa-trash"></i></button></div>')
+            'emptyItem': $('<div class="item" style="margin-bottom:3px;"><input type="text" class="form-control float-left" style="width:90%;"/><button type="button" class="delete-item btn bg-red float-right"><i class="fas fa-trash"></i></button><div class="clearfix"></div></div>')
         }, _settings);
 
         var source = (settings.source == '' || settings.source == undefined) ? [] : JSON.parse(settings.source);
@@ -46,8 +46,20 @@
             },
             elementConvertToComponent: function() {
                 if ($('div.wrap div.item', settings.component).length == 0) {
-                    $('div.wrap', settings.component).append(settings.emptyItem);
+                    var item = settings.emptyItem.clone();
+                    $('div.wrap', settings.component).append(item);
                 }
+
+                // 新增
+                $(settings.component).on('click', 'button.add-item', function() {
+                    var item = settings.emptyItem.clone();
+                    $('div.wrap', settings.component).append(item);
+                });
+
+                // 刪除
+                $(settings.component).on('click', 'button.delete-item', function() {
+                    $(this).closest('div.item').remove();
+                });
             },
             getName: function() {
                 return settings.name;
