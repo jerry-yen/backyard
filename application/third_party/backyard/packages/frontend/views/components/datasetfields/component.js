@@ -70,6 +70,9 @@
                                             <option value="htmleditor">HTML編輯器</option>\
                                             <option value="subtable">子清單</option>\
                                         </optgroup>\
+                                        <optgroup label="家而適專用元件">\
+                                            <option value="dynamictext">動態新增文字方塊</option>\
+                                        </optgroup>\
                                     </select>\
                                 </td>\
                                 <td>\
