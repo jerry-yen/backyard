@@ -197,6 +197,10 @@
                 data: function() {
 
                     var url = (metadata.setting.datas_event == undefined || metadata.setting.datas_event == '') ? ('api/items/' + metadata.dataset.code) : metadata.setting.datas_event;
+                    var count_per_page = metadata.setting.count_per_page;
+                    if (count_per_page != undefined && count_per_page > 0) {
+                        settings.params.count = count_per_page;
+                    }
 
                     $backyard.utility.api(
                         url,

@@ -50,6 +50,15 @@ class Dao extends \backyard\Package
      */
     public function _list($table, $where = array(), $sort = array(), $fields = array())
     {
+
+        // 顯示筆數，如果有值或該值 > 0，則代表要分頁
+        $count_per_page = (isset($where['count'])) ? (int)$where['count'] : -1;
+        unset($where['count']);
+
+        // 目前頁數
+        $page = (isset($where['page'])) ? (int)$where['page'] : 1;
+        unset($where['page']);
+
         // 取得指定欄位
         if (is_array($fields) && count($fields) > 0) {
             get_instance()->backyard->database->select(implode(',', $fields));
@@ -73,8 +82,54 @@ class Dao extends \backyard\Package
             }
         }
 
-        $query = get_instance()->backyard->database->get($table);
-        return $query->result_array();
+        // 指定表單
+        get_instance()->backyard->database =  get_instance()->backyard->database->from($table);
+
+        // 分頁處理
+        $totalPage = 1;
+        $current_page = 1;
+        if ($count_per_page > 0) {
+
+            // 取得總筆數
+            $total = get_instance()->backyard->database->count_all_results('', false);
+
+            if ($count_per_page > $total) {
+                $count_per_page = $total;
+            }
+            $totalPage = ceil($total / $count_per_page);
+            $totalPage = ($totalPage == 0) ? 1 : $totalPage;
+            
+            $page = isset($page) ? $page : 1;
+            $page = ($page < 1) ? 1 : $page;
+            $page = ($page > $totalPage) ? $totalPage : $page;
+
+            $offset = ($page - 1) * $count_per_page;
+            get_instance()->backyard->database = get_instance()->backyard->database->limit($count_per_page, $offset);
+
+            $current_page = (int)(isset($page) ? $page : 1);
+
+            // 取得結果
+            $results = get_instance()->backyard->database->get()->result_array();
+
+            return array(
+                'total' => $total,
+                'total_page' => $totalPage,
+                'current_page' => $current_page,
+                'results' => $results
+            );
+
+        } else {
+
+            // 取得結果
+            $results = get_instance()->backyard->database->get()->result_array();
+
+            return $results;
+        }
+
+        
+
+       
+        
     }
 
     /**

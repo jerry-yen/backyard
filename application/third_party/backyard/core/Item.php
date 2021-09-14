@@ -33,10 +33,21 @@ class Item extends \backyard\core\Dao
     {
         $responses = parent::_list($table, $where, $sort, $fields);
 
+        if (!isset($responses['results'])) {
+            $results = $responses;
+            $responses = array(
+                'total' => count($results),
+                'total_page' => 1,
+                'current_page' => 1
+            );
+        } else {
+            $results = $responses['results'];
+        }
+
         $dataset = get_instance()->backyard->dataset->get($table);
 
         $items = array();
-        foreach ($responses as $response) {
+        foreach ($results as $response) {
             $item = new \backyard\core\Item($table, $response);
 
             $fields = $dataset->fields;
@@ -49,7 +60,9 @@ class Item extends \backyard\core\Dao
             }
             $items[] = $item->toArray();
         }
-        return $items;
+        unset($responses['results']);
+        $responses['results'] = $items;
+        return $responses;
     }
 
     /**

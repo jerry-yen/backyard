@@ -12,6 +12,16 @@ $metadata = array(
             'fieldTip' => ''
         ),
         array(
+            'name' => '每頁筆數', 
+            'dbVariable' => 'count_per_page', 
+            'frontendVariable' => 'count_per_page', 
+            'component' => 'number', 
+            'validator' => array(), 
+            'converter' => array(), 
+            'source' => '', 
+            'fieldTip' => ''
+        ),
+        array(
             'name' => '操作權限', 
             'dbVariable' => 'permission', 
             'frontendVariable' => 'permission', 

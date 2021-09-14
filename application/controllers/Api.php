@@ -369,7 +369,13 @@ class Api extends \chriskacerguis\RestServer\RestController
         get_instance()->backyard->setUser('admin');
         unset($this->inputs[$code]);
         $responses = $this->backyard->item->list($code, $this->inputs);
-        $this->response(array('status' => 'success', 'items' => $responses), 200);
+        $this->response(array(
+            'status' => 'success',
+            'items' => $responses['results'],
+            'total' => $responses['total'],
+            'total_page' => $responses['total_page'],
+            'current_page' => $responses['current_page']
+        ), 200);
     }
 
     /**
@@ -417,7 +423,7 @@ class Api extends \chriskacerguis\RestServer\RestController
         $this->response($response, 200);
     }
 
-    
+
 
 
 
@@ -425,5 +431,5 @@ class Api extends \chriskacerguis\RestServer\RestController
 
 
 
-    
+
 }
